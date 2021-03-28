@@ -1,23 +1,23 @@
 
 #  File: Hull.py
 
-#  Description:
+#  Description: Calculate vertices that create convex hull for a given set of points
 
-#  Student Name:
+#  Student Name: Athul Srinivasaraghavan
 
-#  Student UT EID:
+#  Student UT EID:as84444
 
-#  Partner Name:
+#  Partner Name: None
 
-#  Partner UT EID:
+#  Partner UT EID: N/a
 
 #  Course Name: CS 313E
 
 #  Unique Number: 
 
-#  Date Created:
+#  Date Created:02/28/2021
 
-#  Date Last Modified:
+#  Date Last Modified:03/01/2021
 
 import sys
 
@@ -98,14 +98,45 @@ def det (p, q, r):
 #         returns the convex hull
 def convex_hull (sorted_points):
   upper_hull = []
+  upper_hull.append(sorted_points[0])
+  upper_hull.append(sorted_points[1])
+  n = len(sorted_points)
+  for i in range(2,n):
+    upper_hull.append(sorted_points[i])
+    while (len(upper_hull)>=3) and (det(upper_hull[-3], upper_hull[-2], upper_hull[-1])>=0):
+      upper_hull.pop(-2)
+  
+  lower_hull = []
+  lower_hull.append(sorted_points[-1])
+  lower_hull.append(sorted_points[-2])
+  for i in range(n-1,-1,-1):
+    lower_hull.append(sorted_points[i])
+    while (len(lower_hull)>=3) and (det(lower_hull[-3], lower_hull[-2], lower_hull[-1])>=0):
+      lower_hull.pop(-2)
+  
+  lower_hull.pop()
+  lower_hull.remove(lower_hull[0])
+  for i in lower_hull:
+    upper_hull.append(i)
+  convex_hull = upper_hull
 
-  return
+  return convex_hull
 
 # Input: convex_poly is  a list of Point objects that define the
 #        vertices of a convex polygon in order
 # Output: computes and returns the area of a convex polygon
 def area_poly (convex_poly):
-  return
+  n = len(convex_poly)
+  fhalf = (convex_poly[0].y)*(convex_poly[n-1].x)
+  shalf = (convex_poly[n-1].y)*(convex_poly[0].x)
+  for i in range(n-1):
+    temp = (convex_poly[i].x)*(convex_poly[i+1].y)
+    temp2 = (convex_poly[i].y)*(convex_poly[i+1].x)
+    fhalf += temp
+    shalf += temp2
+  deter = abs(fhalf-shalf)
+
+  return ((1/2)*deter)
 
 # Input: no input
 # Output: a string denoting all test cases have passed
@@ -116,10 +147,6 @@ def test_cases():
 
 def main():
 
-  p = Point(1,1)
-  q = Point(3,3)
-  r = Point(3,2)
-  print(det(p,q,r))
   # create an empty list of Point objects
   points_list = []
 
@@ -140,23 +167,30 @@ def main():
   # sort the list according to x-coordinates
   sorted_points = sorted (points_list)
 
-  '''
+  
   # print the sorted list of Point objects
-  for p in sorted_points:
-    print (str(p))
-  '''
+  #for p in sorted_points:
+    #print (str(p))
+
 
   # get the convex hull
-
+  x = convex_hull(sorted_points)
+  
   # run your test cases
 
   # print your results to standard output
-
+  
   # print the convex hull
-
+  print('Convex Hull')
+  for p in x:
+    print (str(p))
+  print()
   # get the area of the convex hull
+  area = area_poly(x)
+  
+
 
   # print the area of the convex hull
-
+  print('Area of Convex Hull =', area)
 if __name__ == "__main__":
   main()
